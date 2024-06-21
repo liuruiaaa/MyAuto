@@ -58,7 +58,7 @@ class FileChooseListView : ExplorerViewKt {
         (explorerItemListView!!.itemAnimator as SimpleItemAnimator?)?.supportsChangeAnimations =
             false
     }
-
+    //这里是递归
     override fun onCreateViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup?,

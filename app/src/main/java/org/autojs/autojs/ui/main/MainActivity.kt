@@ -130,7 +130,7 @@ class MainActivity : FragmentActivity() {
                 Surface(color = MaterialTheme.colors.background) {//设置主背景色
                     val permission = rememberExternalStoragePermissionsState {//记住应用是否有读写外部存储的权限
                         if (it) {//如果有权限
-                            scriptListFragment.explorerView.onRefresh()//刷新脚本列表
+                            scriptListFragment.explorerView.onRefresh()//刷新脚本列表 ********************************！！！
                         }
                     }
                     LaunchedEffect(key1 = Unit, block = {//当状态改变或者初始调用时，执行请求权限的操作
@@ -194,7 +194,6 @@ fun MainPage(
     val scaffoldState = rememberScaffoldState() // 创建并记住应用的脚手架状态，脚手架管理应用的结构及行为
     onDrawerState(scaffoldState.drawerState) // 对抽屉的状态进行操作
     val scope = rememberCoroutineScope() // 创建并记住一个协程作用域，用于执行后台任务
-
 
     // 获取并记住底栏项目
     val bottomBarItems = remember {
@@ -268,7 +267,7 @@ fun MainPage(
                     ViewCompat.setNestedScrollingEnabled(this, true) //允许嵌套滑动
                 }
             },
-            update = { viewPager0 -> //更新视图
+            update = { viewPager0 -> //Unit//更新视图
                 viewPager0.currentItem = currentPage
             }
         )
@@ -491,45 +490,52 @@ fun TopAppBarMenu(
 ) {
     DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest, offset = offset) {
         val context = LocalContext.current
-        NewDirectory(context, scriptListFragment, onDismissRequest)
+        NewDirectory(context, scriptListFragment, onDismissRequest)//这是右边的+号的
         NewFile(context, scriptListFragment, onDismissRequest)
         ImportFile(context, scriptListFragment, onDismissRequest)
         NewProject(context, scriptListFragment, onDismissRequest)
-//        DropdownMenuItem(onClick = { /*TODO*/ }) {
-//            MyIcon(
-//                painter = painterResource(id = R.drawable.ic_timed_task),
-//                contentDescription = stringResource(id = R.string.text_switch_timed_task_scheduler)
-//            )
-//            Spacer(modifier = Modifier.width(8.dp))
-//            Text(text = stringResource(id = R.string.text_switch_timed_task_scheduler))
-//        }
+        DropdownMenuItem(onClick = { /*TODO*/ }) {
+            MyIcon(
+                painter = painterResource(id = R.drawable.ic_timed_task),
+                contentDescription = stringResource(id = R.string.text_switch_timed_task_scheduler)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = stringResource(id = R.string.text_switch_timed_task_scheduler))
+        }
     }
 }
 
+// 使用@OptIn注解标记这个Composable函数使用了实验性的权限API
 @OptIn(ExperimentalPermissionsApi::class)
+// 定义一个Composable函数NewDirectory，用于创建新目录
 @Composable
 private fun NewDirectory(
-    context: Context,
-    scriptListFragment: ScriptListFragment,
-    onDismissRequest: () -> Unit
+    context: Context, // Android的Context对象，用于访问应用的资源和组件
+    scriptListFragment: ScriptListFragment, // 一个Fragment实例，用于操作脚本列表
+    onDismissRequest: () -> Unit // 一个无参数无返回值的lambda表达式，用作函数参数，通常在需要关闭或取消当前操作时调用
 ) {
+    // rememberExternalStoragePermissionsState函数用于记住外部存储权限的状态
     val permission = rememberExternalStoragePermissionsState {
-        if (it) getScriptOperations(
-            context,
-            scriptListFragment.explorerView
-        ).newDirectory()
-        else showExternalStoragePermissionToast(context)
+        // lambda表达式，根据权限状态(true为已授权)执行对应的操作
+        if (it) // 如果已经获取到了外部存储的权限
+            getScriptOperations(
+                context,
+                scriptListFragment.explorerView // 使用scriptListFragment引用中的explorerView作为参数
+            ).newDirectory() // 调用newDirectory函数创建新目录
+        else // 如果没有获得外部存储的权限
+            showExternalStoragePermissionToast(context) // 显示一个Toast提示需要外部存储权限
     }
+    // DropdownMenuItem是一个下拉菜单项，在用户点击时执行lambda表达式中的操作
     DropdownMenuItem(onClick = {
-        onDismissRequest()
-        permission.launchMultiplePermissionRequest()
+        onDismissRequest() // 调用onDismissRequest来处理点击事件的逻辑，比如关闭当前弹出的窗口或对话框
+        permission.launchMultiplePermissionRequest() // 请求外部存储权限
     }) {
         MyIcon(
-            painter = painterResource(id = R.drawable.ic_floating_action_menu_dir),
-            contentDescription = null
+            painter = painterResource(id = R.drawable.ic_floating_action_menu_dir), // 使用painterResource加载图片资源
+            contentDescription = null // 图标的内容描述，这里为null
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = stringResource(id = R.string.text_directory))
+        Spacer(modifier = Modifier.width(8.dp)) // 使用Spacer插入8.dp宽度的空间
+        Text(text = stringResource(id = R.string.text_directory)) // 显示文本，文本资源来自R.string.text_directory
     }
 }
 

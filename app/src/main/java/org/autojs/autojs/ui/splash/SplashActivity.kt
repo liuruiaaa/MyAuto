@@ -63,6 +63,9 @@ class SplashActivity : ComponentActivity() {
          }
     }
 
+    /**
+     * 启动的图标的 powered by
+     */
     private fun init() {
         setContent {
             val systemUiController = rememberSystemUiController()

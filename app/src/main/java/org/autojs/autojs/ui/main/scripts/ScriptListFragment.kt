@@ -223,9 +223,9 @@ class ScriptListFragment : Fragment() {
         )
         setOnItemClickListener { _, item ->
             item?.let {
-                if (item.isEditable) {
+                if (item.isEditable) { //这里是去编辑文件
                     edit(requireContext(), item.toScriptFile());
-                } else {
+                } else { //这里是去目录，可能是
                     IntentUtil.viewFile(get(), item.path, AppFileProvider.AUTHORITY)
                 }
             }
