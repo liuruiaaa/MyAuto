@@ -25,6 +25,7 @@ class PreferenceFragment : PreferenceFragmentCompat() {
             //.put(getString(R.string.text_theme_color), () -> selectThemeColor(getActivity()))
             // .put(getString(R.string.text_check_for_updates), () -> new UpdateCheckDialog(getActivity()).show())
             // .put(getString(R.string.text_issue_report), () -> startActivity(new Intent(getActivity(), IssueReporterActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)))
+            //这个是在映射自定义的行为 牛逼！
             put(getString(R.string.text_about_me_and_repo)) {
                 it.launchActivity<AboutActivity> {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -55,23 +56,32 @@ class PreferenceFragment : PreferenceFragmentCompat() {
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
+        // 从 ACTION_MAP 中取出与点击的 preference 标题相对应的动作。
         val action = ACTION_MAP[preference.title.toString()]
+        // 获取当前的活动（Activity）实例。
         val activity = requireActivity()
+        // 检查点击的偏好设置是否是“运行脚本”的偏好设置项。
         if (preference.title == getString(R.string.text_intent_run_script)) {
+            // 根据偏好设置的开关状态设置相应组件（Component）的启用状态。
             val state = if ((preference as SwitchPreference).isChecked) {
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED
             } else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            // 使用PackageManager设置组件的启用/禁用状态，这里不让应用被杀死。
             activity.packageManager.setComponentEnabledSetting(
                 ComponentName(activity, RunIntentActivity::class.java),
                 state,
                 PackageManager.DONT_KILL_APP
-            );
+            )
+            // 返回true，表示事件已处理。
             return true
         }
+        // 如果ACTION_MAP中找到了对应的动作，则执行该动作。
         return if (action != null) {
             action(activity)
+            // 返回true，表示事件已被处理。
             true
         } else {
+            // 如果没有找到，就调用父类的onPreferenceTreeClick方法。
             super.onPreferenceTreeClick(preference)
         }
     }

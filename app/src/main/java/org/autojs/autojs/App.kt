@@ -1,6 +1,7 @@
 package org.autojs.autojs
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.multidex.MultiDexApplication
 import androidx.work.Configuration
+import com.baidu.mobstat.StatService
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.transition.Transition
@@ -47,11 +49,29 @@ class App : MultiDexApplication(), Configuration.Provider {
             this, com.stardust.app.BuildConfig.generate(BuildConfig::class.java)
         )
         instance = WeakReference(this)
-        setUpStaticsTool()
+        setBaiduUpStaticsTool(this)
+        //setUpStaticsTool()
         setUpDebugEnvironment()
         init()
     }
 
+    private fun setBaiduUpStaticsTool(context: Context) {
+
+        // SDK初始化，该函数不会采集用户个人信息，也不会向百度移动统计后台上报数据
+        StatService.init( context,  "dbcfccb460",  "test");
+
+        // 通过该接口可以控制敏感数据采集，true表示可以采集，false表示不可以采集，
+        // 该方法一定要最优先调用，请在StatService.start(this)之前调用，采集这些数据可以帮助App运营人员更好的监控App的使用情况，
+        // 建议有用户隐私策略弹窗的App，用户未同意前设置false,同意之后设置true
+        StatService.setAuthorizedState( this, true)
+
+        // setSendLogStrategy已经@deprecated，建议使用新的start接口
+        // 如果没有页面和自定义事件统计埋点，此代码一定要设置，否则无法完成统计
+        // 进程第一次执行此代码，会导致发送上次缓存的统计数据；若无上次缓存数据，则发送空启动日志
+        // 由于多进程等可能造成Application多次执行，建议此代码不要埋点在Application中，否则可能造成启动次数偏高
+        // 建议此代码埋点在统计路径触发的第一个页面中，若可能存在多个则建议都埋点
+        StatService.start(this);
+    }
     private fun setUpStaticsTool() {
         if (BuildConfig.DEBUG)
             return

@@ -20,7 +20,7 @@ dependencyResolutionManagement {
         mavenCentral { url = uri("https://maven.aliyun.com/repository/public") }
     }
 }
-rootProject.name = "Auto_test"
+rootProject.name = "AutoFlow"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")

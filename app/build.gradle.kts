@@ -20,7 +20,8 @@ if (propFile.exists()) {
 
 android {
     defaultConfig {
-        applicationId = "org.autojs.autoxjs"
+        applicationId = "com.rui_2014.myapp"
+        //applicationId = "org.autojs.autoxjs"
         versionCode = AndroidConfigConventions.VERSION_CODE
         versionName = AndroidConfigConventions.VERSION_NAME
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -139,6 +140,7 @@ android {
 }
 
 dependencies {
+
     implementation(projects.autojs)
     implementation(projects.apkbuilder)
     implementation(projects.codeeditor)
@@ -154,6 +156,7 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material3)
+    implementation(files("libs\\Baidu_Mtj_android_4.0.10.9.jar"))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     implementation(libs.androidx.activity.compose)
 

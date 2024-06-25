@@ -105,7 +105,7 @@ object Scripts {
     }
 
     fun run(file: ScriptFile): ScriptExecution? {
-        return try {
+        return try {//这里是执行js代码的地方
             AutoJs.getInstance().scriptEngineService.execute(
                 file.toSource(),
                 ExecutionConfig(workingDirectory = file.parent)

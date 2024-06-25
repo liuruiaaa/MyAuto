@@ -96,27 +96,27 @@ fun DrawerPage() {
                 )
             }
             Text(text = stringResource(id = R.string.text_service))
-            AccessibilityServiceSwitch()
-            StableModeSwitch()
-            NotificationUsageRightSwitch()
-            ForegroundServiceSwitch()
-            UsageStatsPermissionSwitch()
+            AccessibilityServiceSwitch()//无障碍开关
+            StableModeSwitch()//稳定模式
+            NotificationUsageRightSwitch()//通知读取权限
+            ForegroundServiceSwitch()//前提服务
+            UsageStatsPermissionSwitch()//使用情况访问权限
 
             Text(text = stringResource(id = R.string.text_script_record))
-            FloatingWindowSwitch()
-            VolumeDownControlSwitch()
-            AutoBackupSwitch()
+            FloatingWindowSwitch()//悬浮窗
+            VolumeDownControlSwitch()//音量下键控制
+            AutoBackupSwitch()//自动备份脚本
 
             Text(text = stringResource(id = R.string.text_others))
-            ConnectComputerSwitch()
-            USBDebugSwitch()
+            ConnectComputerSwitch()//连接电脑
+            USBDebugSwitch()//打开USB调试
 
-            SwitchTimedTaskScheduler()
-            ProjectAddress()
-            DownloadLink()
-            Feedback()
-            CheckForUpdate()
-            AppDetailsSettings()
+            SwitchTimedTaskScheduler()//切换定时调度器
+            ProjectAddress()//项目地址
+            DownloadLink()//下载地址
+            Feedback()//问题反馈
+            CheckForUpdate()//检测更新
+            AppDetailsSettings()//应用详情设置
         }
         Spacer(
             modifier = Modifier
@@ -124,7 +124,7 @@ fun DrawerPage() {
                 .fillMaxWidth()
                 .background(AutoXJsTheme.colors.divider)
         )
-        BottomButtons()
+        BottomButtons()// 设置 退出
         Spacer(
             modifier = Modifier
                 .windowInsetsBottomHeight(WindowInsets.navigationBars)

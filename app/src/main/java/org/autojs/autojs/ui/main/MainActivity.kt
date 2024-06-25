@@ -267,7 +267,7 @@ fun MainPage(
                     ViewCompat.setNestedScrollingEnabled(this, true) //允许嵌套滑动
                 }
             },
-            update = { viewPager0 -> //Unit//更新视图
+            update = { viewPager0 -> //Unit//更新视图  页面是在这里实现先跳转的
                 viewPager0.currentItem = currentPage
             }
         )

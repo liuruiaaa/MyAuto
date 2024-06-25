@@ -175,7 +175,7 @@ open class ExplorerViewKt : ThemeColorSwipeRefreshLayout, OnRefreshListener,
     override fun isFocused(): Boolean {
         return true
     }
-
+    //这个是文件
     private fun init() {
         Log.d(
             LOG_TAG, "item bg = " + Integer.toHexString(
@@ -435,6 +435,7 @@ open class ExplorerViewKt : ThemeColorSwipeRefreshLayout, OnRefreshListener,
                         parent,
                         false
                     )
+
                 )
             }
         }
@@ -595,7 +596,7 @@ open class ExplorerViewKt : ThemeColorSwipeRefreshLayout, OnRefreshListener,
         }
 
 
-        fun onItemClick() {
+        fun onItemClick() {//=================!
             enterDirectChildPage(explorerPage)
         }
 
@@ -692,7 +693,7 @@ open class ExplorerViewKt : ThemeColorSwipeRefreshLayout, OnRefreshListener,
                 showSortOptions()
             }
             goBack.setOnClickListener {
-                back()
+                back()//=================!
             }
             itemView.findViewById<View>(R.id.title_container).setOnClickListener {
                 collapseOrExpand()

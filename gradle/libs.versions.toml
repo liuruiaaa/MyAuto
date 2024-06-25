@@ -77,6 +77,8 @@ rxjava2 = "2.2.21"
 rxandroid2 = "2.1.1"
 eventbus = "3.3.1"
 commons-io = "2.16.1"
+googleServices = "4.3.14"
+firebaseAnalytics = "17.4.1"
 [libraries]
 # androidx
 analytics = { module = "com.flurry.android:analytics", version.ref = "analytics-version" }
@@ -163,10 +165,12 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalytics" }
 documentfile = { module = "androidx.documentfile:documentfile", version.ref = "androidxDocumentfile" }
 google-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson" }
 junit = { module = "junit:junit", version.ref = "junit" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
@@ -238,6 +242,9 @@ autojs-android-application = { id = "autojs.android.application", version = "uns
 autojs-android-application-compose = { id = "autojs.android.application.compose", version = "unspecified" }
 autojs-android-library = { id = "autojs.android.library", version = "unspecified" }
 autojs-jvm-library = { id = "autojs.jvm.library", version = "unspecified" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+
+
 [bundles]
 ktor = [
     "ktor-server-core",
