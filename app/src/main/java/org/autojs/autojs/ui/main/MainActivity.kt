@@ -211,8 +211,7 @@ fun MainPage(
 
     // 是一个使用compose的布局结构，用于创建应用的顶栏、底栏、抽屉和内容
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(), // 充满可用空间
+        modifier = Modifier.fillMaxSize(), // 充满可用空间
         scaffoldState = scaffoldState,
         drawerGesturesEnabled = scaffoldState.drawerState.isOpen, //抽屉手势可用性取决于是否处于打开状态
 //        topBar = {

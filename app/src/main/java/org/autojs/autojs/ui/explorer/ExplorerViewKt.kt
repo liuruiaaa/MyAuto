@@ -192,18 +192,29 @@ open class ExplorerViewKt : ThemeColorSwipeRefreshLayout, OnRefreshListener,
     }
 
     private fun initExplorerItemListView() {
+        // 设定explorerAdapter为explorerItemListView的适配器，这个适配器用来创建视图和将数据绑定到视图上
         explorerItemListView!!.adapter = explorerAdapter
+
+        // 创建一个WrapContentGridLayoutManger实例，这是一个用于Grid布局的布局管理器
+        // 我们在此实例化它，并将context传递给构造函数，且我们指定列数为2
         val manager = WrapContentGridLayoutManger(context, 2)
+
+        // 设置布局管理器的调试信息，以便于在出现问题时进行调试
         manager.setDebugInfo("ExplorerView")
+
+        // 设置布局管理器的spanSizeLookup属性，这个回调会返回每个位置的跨度大小
+        // 通常在一个网格布局中，每个格子占一个跨度，但是我们可以通过调整返回的跨度大小来调整每个位置的元素占多少个格子
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                //For directories
+                // 对于目录，如果它的位置在positionOfCategoryDir之后并且在positionOfCategoryFile之前，我们让它的跨度为directorySpanSize1
                 return if (position > positionOfCategoryDir && position < positionOfCategoryFile()) {
                     directorySpanSize1
                 } else 2
-                //For files and category
+                // 对于文件和类别，我们让它们的跨度为2，就是每行显示两个元素
             }
         }
+
+        // 最后我们将这个定制过的布局管理器设定到explorerItemListView上
         explorerItemListView!!.layoutManager = manager
     }
 
@@ -402,14 +413,20 @@ open class ExplorerViewKt : ThemeColorSwipeRefreshLayout, OnRefreshListener,
         explorer!!.unregisterChangeListener(this)
     }
 
+    // 声明一个受保护、可被覆盖的方法onCreateViewHolder，输入参数包括LayoutInflater，ViewGroup，以及一个Int类型的viewType
     protected open fun onCreateViewHolder(
-        inflater: LayoutInflater,
-        parent: ViewGroup?,
-        viewType: Int
-    ): BindableViewHolder<Any> {
+        inflater: LayoutInflater, // 用于将 layout XML文件转换为等效的View对象的LayoutInflater
+        parent: ViewGroup?,       // ViewHolder的View对象将被加入到的ViewGroup
+        viewType: Int             // 视图类型的标识符
+    ): BindableViewHolder<Any> {  // 方法返回一个BindableViewHolder对象，该对象代表一个列表项目
+        // 根据viewType的值，返回不同类型的ViewHolder
         return when (viewType) {
+            // 如果 viewType 等于 VIEW_TYPE_ITEM
             VIEW_TYPE_ITEM -> {
+                // 则创建并返回一个 ExplorerItemViewHolder 这是构造函数
                 ExplorerItemViewHolder(
+                    // 使用 inflater 将 XML 布局文件 inflate 成一个 View 对象，
+                    // 布局文件是R.layout.script_file_list_file，然后将其作为参数传递给 ExplorerItemViewHolder 的构造函数
                     inflater.inflate(
                         R.layout.script_file_list_file,
                         parent,
@@ -418,8 +435,11 @@ open class ExplorerViewKt : ThemeColorSwipeRefreshLayout, OnRefreshListener,
                 )
             }
 
+            // 如果 viewType 等于 VIEW_TYPE_PAGE
             VIEW_TYPE_PAGE -> {
+                // 则创建并返回一个 ExplorerPageViewHolder  这是构造函数
                 ExplorerPageViewHolder(
+                    // 布局文件是 R.layout.script_file_list_directory，然后将其作为参数传递给 ExplorerPageViewHolder 的构造函数
                     inflater.inflate(
                         R.layout.script_file_list_directory,
                         parent,
@@ -428,8 +448,11 @@ open class ExplorerViewKt : ThemeColorSwipeRefreshLayout, OnRefreshListener,
                 )
             }
 
+            // 如果 viewType 既不是 VIEW_TYPE_ITEM 也不是 VIEW_TYPE_PAGE
             else -> {
+                // 创建并返回一个 CategoryViewHolder  这是构造函数
                 CategoryViewHolder(
+                    // 布局文件是 R.layout.script_file_list_category，然后将其作为参数传递给 CategoryViewHolder 的构造函数
                     inflater.inflate(
                         R.layout.script_file_list_category,
                         parent,
