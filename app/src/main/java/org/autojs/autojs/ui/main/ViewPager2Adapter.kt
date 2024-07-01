@@ -4,12 +4,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.autojs.autojs.ui.main.scripts.ScriptListFragment
+import org.autojs.autojs.ui.main.startup.StartUpFragment
 import org.autojs.autojs.ui.main.task.TaskManagerFragmentKt
 import org.autojs.autojs.ui.main.web.EditorAppManager
 
 class ViewPager2Adapter(
     fragmentActivity: FragmentActivity,
-    private val scriptListFragment: ScriptListFragment,
+    private val startUpFragment: StartUpFragment,
     private val taskManagerFragment: TaskManagerFragmentKt,
     private val webViewFragment: EditorAppManager
 ) : FragmentStateAdapter(fragmentActivity) {
@@ -17,7 +18,7 @@ class ViewPager2Adapter(
     override fun createFragment(position: Int): Fragment {
         val fragment = when (position) {
             0 -> {
-                scriptListFragment
+                startUpFragment
             }
             1 -> {
                 taskManagerFragment

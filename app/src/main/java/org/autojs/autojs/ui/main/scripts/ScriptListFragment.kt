@@ -58,7 +58,6 @@ class ScriptListFragment : Fragment() {
 
     val explorerView by lazy { ExplorerViewKt(this.requireContext()) }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

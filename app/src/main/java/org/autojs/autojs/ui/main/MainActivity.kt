@@ -90,6 +90,7 @@ import org.autojs.autojs.ui.main.components.DocumentPageMenuButton
 import org.autojs.autojs.ui.main.components.LogButton
 import org.autojs.autojs.ui.main.drawer.DrawerPage
 import org.autojs.autojs.ui.main.scripts.ScriptListFragment
+import org.autojs.autojs.ui.main.startup.StartUpFragment
 import org.autojs.autojs.ui.main.task.TaskManagerFragmentKt
 import org.autojs.autojs.ui.main.web.EditorAppManager
 import org.autojs.autojs.ui.util.launchActivity
@@ -105,7 +106,8 @@ class MainActivity : FragmentActivity() {
         fun getIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 
-    private val scriptListFragment by lazy { ScriptListFragment() }
+    //private val scriptListFragment by lazy { ScriptListFragment() }
+    private val startUpFragment by lazy { StartUpFragment() }
     private val taskManagerFragment by lazy { TaskManagerFragmentKt() }
     private val webViewFragment by lazy { EditorAppManager() }
     private var lastBackPressedTime = 0L
@@ -130,7 +132,7 @@ class MainActivity : FragmentActivity() {
                 Surface(color = MaterialTheme.colors.background) {//设置主背景色
                     val permission = rememberExternalStoragePermissionsState {//记住应用是否有读写外部存储的权限
                         if (it) {//如果有权限
-                            scriptListFragment.explorerView.onRefresh()//刷新脚本列表 ********************************！！！
+                           // scriptListFragment.explorerView.onRefresh()//刷新脚本列表 ********************************！！！
                         }
                     }
                     LaunchedEffect(key1 = Unit, block = {//当状态改变或者初始调用时，执行请求权限的操作
@@ -138,7 +140,7 @@ class MainActivity : FragmentActivity() {
                     })
                     MainPage(//设置主界面
                         activity = this,//当前的Activity
-                        scriptListFragment = scriptListFragment,//脚本列表的Fragment
+                        startUpFragment = startUpFragment,//脚本列表的Fragment
                         taskManagerFragment = taskManagerFragment,//任务管理的Fragment
                         webViewFragment = webViewFragment,//网页视图的Fragment
                         onDrawerState = {//处理侧拉菜单的状态
@@ -156,14 +158,15 @@ class MainActivity : FragmentActivity() {
         TimedTaskScheduler.ensureCheckTaskWorks(application)
     }
 
+    //后退的时候的逻辑
     override fun onBackPressed() {
-        if (drawerState?.isOpen == true) {
-            scope?.launch { drawerState?.close() }
-            return
-        }
-        if (viewPager.currentItem == 0 && scriptListFragment.onBackPressed()) {
-            return
-        }
+//        if (drawerState?.isOpen == true) {
+//            scope?.launch { drawerState?.close() }
+//            return
+//        }
+//        if (viewPager.currentItem == 0 && startUpFragment.onBackPressed()) {
+//            return
+//        }
         back()
     }
 
@@ -184,7 +187,7 @@ class MainActivity : FragmentActivity() {
 @Composable
 fun MainPage(
     activity: FragmentActivity,
-    scriptListFragment: ScriptListFragment,
+    startUpFragment: StartUpFragment,
     taskManagerFragment: TaskManagerFragmentKt,
     webViewFragment: EditorAppManager,
     onDrawerState: (DrawerState) -> Unit,
@@ -212,30 +215,30 @@ fun MainPage(
             .fillMaxSize(), // 充满可用空间
         scaffoldState = scaffoldState,
         drawerGesturesEnabled = scaffoldState.drawerState.isOpen, //抽屉手势可用性取决于是否处于打开状态
-        topBar = {
-            Surface(elevation = 4.dp, color = MaterialTheme.colors.primarySurface) {
-                Column() {
-                    Spacer(
-                        modifier = Modifier
-                            .windowInsetsTopHeight(WindowInsets.statusBars) //添加顶部间距
-                    )
-                    //设置顶部栏
-                    TopBar(
-                        currentPage = currentPage, //当前页面的变量，这里传入的是前面定义的状态变量currentPage
-                        requestOpenDrawer = { //定义一个lambda函数，这个函数会在用户点击打开抽屉按钮时调用
-                            scope.launch { //使用前面创建的协程作用域启动一个新的协程
-                                scaffoldState.drawerState.open() //在协程中调用scaffoldState的drawerState的open方法，这样做可以将打开抽屉的操作切换到后台线程，不会堵塞主线程
-                            }
-                        },
-                        onSearch = { keyword -> //定义一个lambda函数，这个函数会在用户进行搜索时被调用
-                            scriptListFragment.explorerView.setFilter { it.name.contains(keyword) } //调用scriptListFragment的explorerView的setFilter方法来对显示的项目进行过滤，只显示名字包含搜索关键字的项目
-                        },
-                        scriptListFragment = scriptListFragment, //传递脚本列表的fragment，这样TopBar可以访问到他的方法和属性
-                        webViewFragment = webViewFragment //传递webview的fragment，这样TopBar可以访问到他的方法和属性
-                    )
-                }
-            }
-        },
+//        topBar = {
+//            Surface(elevation = 4.dp, color = MaterialTheme.colors.primarySurface) {
+//                Column() {
+//                    Spacer(
+//                        modifier = Modifier
+//                            .windowInsetsTopHeight(WindowInsets.statusBars) //添加顶部间距
+//                    )
+//                    //设置顶部栏
+//                    TopBar(
+//                        currentPage = currentPage, //当前页面的变量，这里传入的是前面定义的状态变量currentPage
+//                        requestOpenDrawer = { //定义一个lambda函数，这个函数会在用户点击打开抽屉按钮时调用
+//                            scope.launch { //使用前面创建的协程作用域启动一个新的协程
+//                                scaffoldState.drawerState.open() //在协程中调用scaffoldState的drawerState的open方法，这样做可以将打开抽屉的操作切换到后台线程，不会堵塞主线程
+//                            }
+//                        },
+//                        onSearch = { keyword -> //定义一个lambda函数，这个函数会在用户进行搜索时被调用
+//                            scriptListFragment.explorerView.setFilter { it.name.contains(keyword) } //调用scriptListFragment的explorerView的setFilter方法来对显示的项目进行过滤，只显示名字包含搜索关键字的项目
+//                        },
+//                        scriptListFragment = scriptListFragment, //传递脚本列表的fragment，这样TopBar可以访问到他的方法和属性
+//                        webViewFragment = webViewFragment //传递webview的fragment，这样TopBar可以访问到他的方法和属性
+//                    )
+//                }
+//            }
+//        },
         bottomBar = {  //设置底部栏
             Surface(elevation = 4.dp, color = MaterialTheme.colors.surface) {
                 Column {
@@ -247,9 +250,10 @@ fun MainPage(
                 }
             }
         },
-        drawerContent = {
-            DrawerPage() //设置抽屉中的内容
-        },
+
+//        drawerContent = {
+//            DrawerPage() //设置抽屉中的内容
+//        },
 
         ) {
         AndroidView( //可以插入自定义的Android视图
@@ -259,7 +263,7 @@ fun MainPage(
                     fillMaxSize()
                     adapter = ViewPager2Adapter( //设置adapter
                         activity,
-                        scriptListFragment,
+                        startUpFragment,
                         taskManagerFragment,
                         webViewFragment
                     )
@@ -327,6 +331,7 @@ private fun getBottomItems(context: Context) = mutableStateListOf(
     BottomNavigationItem(
         R.drawable.ic_web,
         context.getString(R.string.text_document)
+        //context.getString(R.string.text_document)
     )
 )
 

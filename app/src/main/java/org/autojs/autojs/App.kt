@@ -72,13 +72,13 @@ class App : MultiDexApplication(), Configuration.Provider {
         // 建议此代码埋点在统计路径触发的第一个页面中，若可能存在多个则建议都埋点
         StatService.start(this);
     }
-    private fun setUpStaticsTool() {
-        if (BuildConfig.DEBUG)
-            return
-        FlurryAgent.Builder()
-            .withLogEnabled(BuildConfig.DEBUG)
-            .build(this, "D42MH48ZN4PJC5TKNYZD")
-    }
+//    private fun setUpStaticsTool() {
+//        if (BuildConfig.DEBUG)
+//            return
+//        FlurryAgent.Builder()
+//            .withLogEnabled(BuildConfig.DEBUG)
+//            .build(this, "D42MH48ZN4PJC5TKNYZD")
+//    }
 
     private fun setUpDebugEnvironment() {
         Bugly.isDev = false
@@ -216,7 +216,7 @@ class App : MultiDexApplication(), Configuration.Provider {
     companion object {
 
         private const val TAG = "App"
-        private const val BUGLY_APP_ID = "19b3607b53"
+        private const val BUGLY_APP_ID = "edba4be2fc"
 
         private lateinit var instance: WeakReference<App>
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="#cccccc"/> <!-- 白色背景 -->
+
+    <size
+        android:width="200dp"
+        android:height="200dp"/> <!-- 设置半径，因为是圆形，所以宽高应该相等 -->
+
+    <stroke
+        android:width="2dp"
+        android:color="#000000"/> <!-- 黑色边框，你可以改变宽度来调整边框的粗细 -->
+
+</shape>

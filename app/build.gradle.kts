@@ -141,6 +141,7 @@ android {
 
 dependencies {
 
+    implementation(libs.material.material)
     implementation(projects.autojs)
     implementation(projects.apkbuilder)
     implementation(projects.codeeditor)

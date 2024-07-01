@@ -79,8 +79,12 @@ eventbus = "3.3.1"
 commons-io = "2.16.1"
 googleServices = "4.3.14"
 firebaseAnalytics = "17.4.1"
+materialEdition = "1.12.0"
 [libraries]
-# androidx
+
+#这个是了一个ui库
+material-material = { module = "com.google.android.material:material", version.ref = "materialEdition" }
+# androidx 版本
 analytics = { module = "com.flurry.android:analytics", version.ref = "analytics-version" }
 android-expandablerecyclerview = { module = "com.bignerdranch.android:expandablerecyclerview", version.ref = "bignerdranch-expandablerecyclerview" }
 android-issue-reporter = { module = "com.heinrichreimersoftware:android-issue-reporter", version.ref = "androidIssueReporterVersion" }
