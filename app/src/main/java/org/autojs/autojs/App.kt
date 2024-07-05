@@ -48,6 +48,8 @@ class App : MultiDexApplication(), Configuration.Provider {
         GlobalAppContext.set(
             this, com.stardust.app.BuildConfig.generate(BuildConfig::class.java)
         )
+        //访问App.app属性时，如果App实例已经被垃圾回收，那么尝试访问它会导致应用崩溃（因为get()!!会抛出异常）。
+        //不过，按照一般的应用生命周期管理，App实例会一直存活直到应用终止，所以在实际使用中几乎不会遇到这种情况。
         instance = WeakReference(this)
         setBaiduUpStaticsTool(this)
         //setUpStaticsTool()

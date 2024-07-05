@@ -223,47 +223,40 @@ open class ExplorerViewKt : ThemeColorSwipeRefreshLayout, OnRefreshListener,
     }
 
     @SuppressLint("CheckResult", "NotifyDataSetChanged")
-// 禁用了特定的Lint警告：方法调用结果未被检查和调用notifyDataSetChanged。
+    // 禁用了特定的Lint警告：方法调用结果未被检查和调用notifyDataSetChanged。
+    // 这个方法是用来填充文件和文件夹的，之前的init() 是用来打格子的,这就对上了。。。
     private fun loadItemList() {
         isRefreshing = true
-        // 开始刷新标志，表示开始加载数据。
 
+        // 开始刷新标志，表示开始加载数据。
         explorer!!.fetchChildren(currentPageState.currentPage)
             // 调用explorer对象的fetchChildren方法取得当前页面的子项（例如文件夹中的文件和文件夹）。
-
             .subscribeOn(Schedulers.io())
             // 指定上游操作符（fetchChildren）在IO线程执行。
-
             .flatMapObservable { page: ExplorerPage? ->
                 currentPageState.currentPage = page
                 Observable.fromIterable(page)
             }
             // 把从fetchChildren接收的结果（一个ExplorerPage对象）转换成一个Observable序列。
-
             .filter { f: ExplorerItem -> if (filter == null) true else filter!!.invoke(f) }
             // 过滤文件项。如果设置了filter，就调用filter方法决定是否保留该项。
-
             .collectInto(explorerItemList.cloneConfig()) { obj: ExplorerItemList, item: ExplorerItem? ->
                 obj.add(item)
             }
             // 把经过过滤的项收集到一个新的ExplorerItemList中（这个对象基于当前explorerItemList的配置克隆得来）。
-
             .observeOn(Schedulers.computation())
             // 改变线程，确保下游操作符在计算线程执行。
-
             .doOnSuccess { obj: ExplorerItemList -> obj.sort() }
             // 在成功完成收集操作之后，对收集到的项目列表进行排序。
-
             .observeOn(AndroidSchedulers.mainThread())
             // 再次改变线程，确保接下来的操作在主线程执行。
-
             .subscribe { list: ExplorerItemList ->
-                explorerItemList = list
-                explorerAdapter.notifyDataSetChanged()
-                isRefreshing = false
-                post { explorerItemListView!!.scrollToPosition(currentPageState.scrollY) }
+                explorerItemList = list                  // 设置新的explorerItemList 应该就是文件夹
+                explorerAdapter.notifyDataSetChanged()   // 设置新的explorerItemList 这个应该是文件
+                isRefreshing = false                     // 结束刷新标志
+                post { explorerItemListView!!.scrollToPosition(currentPageState.scrollY) } // 将列表滚动到之前保存的位置
             }
-        // 订阅以上构建的数据流。更新界面上的文件列表：设置新的explorerItemList、通知适配器数据已更改、结束刷新标志、将列表滚动到之前保存的位置。
+            // 订阅以上构建的数据流。更新界面上的文件列表：设置新的explorerItemList、通知适配器数据已更改、结束刷新标志、将列表滚动到之前保存的位置。
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

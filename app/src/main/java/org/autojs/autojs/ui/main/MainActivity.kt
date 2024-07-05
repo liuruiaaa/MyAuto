@@ -16,10 +16,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -44,7 +42,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.primarySurface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -74,7 +71,6 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.stardust.app.permission.DrawOverlaysPermission
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.autojs.autojs.Pref
 import org.autojs.autojs.autojs.AutoJs
 import org.autojs.autojs.external.foreground.ForegroundService
@@ -86,12 +82,11 @@ import org.autojs.autojs.ui.compose.widget.MyIcon
 import org.autojs.autojs.ui.compose.widget.SearchBox2
 import org.autojs.autojs.ui.explorer.ExplorerViewKt
 import org.autojs.autojs.ui.floating.FloatyWindowManger
+import org.autojs.autojs.ui.main.bindmachine.BindMachineFragment
 import org.autojs.autojs.ui.main.components.DocumentPageMenuButton
 import org.autojs.autojs.ui.main.components.LogButton
-import org.autojs.autojs.ui.main.drawer.DrawerPage
 import org.autojs.autojs.ui.main.scripts.ScriptListFragment
 import org.autojs.autojs.ui.main.startup.StartUpFragment
-import org.autojs.autojs.ui.main.task.TaskManagerFragmentKt
 import org.autojs.autojs.ui.main.web.EditorAppManager
 import org.autojs.autojs.ui.util.launchActivity
 import org.autojs.autojs.ui.widget.fillMaxSize
@@ -106,9 +101,10 @@ class MainActivity : FragmentActivity() {
         fun getIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 
-    //private val scriptListFragment by lazy { ScriptListFragment() }
+    private val scriptListFragment by lazy { ScriptListFragment() }
     private val startUpFragment by lazy { StartUpFragment() }
-    private val taskManagerFragment by lazy { TaskManagerFragmentKt() }
+    //private val taskManagerFragment by lazy { TaskManagerFragmentKt() }
+    private val bindMachineFragment by lazy { BindMachineFragment() }
     private val webViewFragment by lazy { EditorAppManager() }
     private var lastBackPressedTime = 0L
     private var drawerState: DrawerState? = null
@@ -141,8 +137,8 @@ class MainActivity : FragmentActivity() {
                     MainPage(//设置主界面
                         activity = this,//当前的Activity
                         startUpFragment = startUpFragment,//脚本列表的Fragment
-                        taskManagerFragment = taskManagerFragment,//任务管理的Fragment
-                        webViewFragment = webViewFragment,//网页视图的Fragment
+                        bindMachineFragment = bindMachineFragment,//任务管理的Fragment
+                        scriptListFragment = scriptListFragment,//网页视图的Fragment
                         onDrawerState = {//处理侧拉菜单的状态
                             this.drawerState = it
                         },
@@ -188,8 +184,8 @@ class MainActivity : FragmentActivity() {
 fun MainPage(
     activity: FragmentActivity,
     startUpFragment: StartUpFragment,
-    taskManagerFragment: TaskManagerFragmentKt,
-    webViewFragment: EditorAppManager,
+    bindMachineFragment: BindMachineFragment,
+    scriptListFragment: ScriptListFragment,
     onDrawerState: (DrawerState) -> Unit,
     viewPager: ViewPager2
 ) {
@@ -263,8 +259,8 @@ fun MainPage(
                     adapter = ViewPager2Adapter( //设置adapter
                         activity,
                         startUpFragment,
-                        taskManagerFragment,
-                        webViewFragment
+                        bindMachineFragment,
+                        scriptListFragment
                     )
                     isUserInputEnabled = false //禁止用户输入
                     ViewCompat.setNestedScrollingEnabled(this, true) //允许嵌套滑动
