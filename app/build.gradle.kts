@@ -140,7 +140,8 @@ android {
 }
 
 dependencies {
-
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.8")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")
     implementation(libs.material.material)
     implementation(projects.autojs)
     implementation(projects.apkbuilder)

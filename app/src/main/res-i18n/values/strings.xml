@@ -547,4 +547,12 @@
     <string name="text_reconnecting">正在重新连接</string>
     <string name="text_connecting">正在连接</string>
     <string name="text_handshake_failed">握手失败</string>
+
+
+    <string-array name="cat_list_popup_window_content" translatable="false">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+        <item>Item 4</item>
+    </string-array>
 </resources>

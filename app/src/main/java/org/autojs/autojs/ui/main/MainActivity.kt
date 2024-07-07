@@ -9,15 +9,22 @@ import android.os.Process
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -42,6 +49,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.primarySurface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -53,13 +61,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -71,6 +83,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.stardust.app.permission.DrawOverlaysPermission
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.autojs.autojs.Pref
 import org.autojs.autojs.autojs.AutoJs
 import org.autojs.autojs.external.foreground.ForegroundService
@@ -82,11 +95,13 @@ import org.autojs.autojs.ui.compose.widget.MyIcon
 import org.autojs.autojs.ui.compose.widget.SearchBox2
 import org.autojs.autojs.ui.explorer.ExplorerViewKt
 import org.autojs.autojs.ui.floating.FloatyWindowManger
-import org.autojs.autojs.ui.main.bindmachine.BindMachineFragment
+import org.autojs.autojs.ui.main.bindmachine.BindMachine
 import org.autojs.autojs.ui.main.components.DocumentPageMenuButton
 import org.autojs.autojs.ui.main.components.LogButton
+import org.autojs.autojs.ui.main.drawer.DrawerPage
 import org.autojs.autojs.ui.main.scripts.ScriptListFragment
 import org.autojs.autojs.ui.main.startup.StartUpFragment
+import org.autojs.autojs.ui.main.task.TaskManagerFragmentKt
 import org.autojs.autojs.ui.main.web.EditorAppManager
 import org.autojs.autojs.ui.util.launchActivity
 import org.autojs.autojs.ui.widget.fillMaxSize
@@ -101,10 +116,10 @@ class MainActivity : FragmentActivity() {
         fun getIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 
-    private val scriptListFragment by lazy { ScriptListFragment() }
+    //private val scriptListFragment by lazy { ScriptListFragment() }
     private val startUpFragment by lazy { StartUpFragment() }
     //private val taskManagerFragment by lazy { TaskManagerFragmentKt() }
-    private val bindMachineFragment by lazy { BindMachineFragment() }
+    private val bindMachine by lazy { BindMachine() }
     private val webViewFragment by lazy { EditorAppManager() }
     private var lastBackPressedTime = 0L
     private var drawerState: DrawerState? = null
@@ -137,8 +152,8 @@ class MainActivity : FragmentActivity() {
                     MainPage(//设置主界面
                         activity = this,//当前的Activity
                         startUpFragment = startUpFragment,//脚本列表的Fragment
-                        bindMachineFragment = bindMachineFragment,//任务管理的Fragment
-                        scriptListFragment = scriptListFragment,//网页视图的Fragment
+                        bindMachine = bindMachine,//任务管理的Fragment
+                        webViewFragment = webViewFragment,//网页视图的Fragment
                         onDrawerState = {//处理侧拉菜单的状态
                             this.drawerState = it
                         },
@@ -184,8 +199,8 @@ class MainActivity : FragmentActivity() {
 fun MainPage(
     activity: FragmentActivity,
     startUpFragment: StartUpFragment,
-    bindMachineFragment: BindMachineFragment,
-    scriptListFragment: ScriptListFragment,
+    bindMachine: BindMachine,
+    webViewFragment: EditorAppManager,
     onDrawerState: (DrawerState) -> Unit,
     viewPager: ViewPager2
 ) {
@@ -210,30 +225,24 @@ fun MainPage(
         modifier = Modifier.fillMaxSize(), // 充满可用空间
         scaffoldState = scaffoldState,
         drawerGesturesEnabled = scaffoldState.drawerState.isOpen, //抽屉手势可用性取决于是否处于打开状态
-//        topBar = {
-//            Surface(elevation = 4.dp, color = MaterialTheme.colors.primarySurface) {
-//                Column() {
-//                    Spacer(
-//                        modifier = Modifier
-//                            .windowInsetsTopHeight(WindowInsets.statusBars) //添加顶部间距
-//                    )
-//                    //设置顶部栏
-//                    TopBar(
-//                        currentPage = currentPage, //当前页面的变量，这里传入的是前面定义的状态变量currentPage
-//                        requestOpenDrawer = { //定义一个lambda函数，这个函数会在用户点击打开抽屉按钮时调用
-//                            scope.launch { //使用前面创建的协程作用域启动一个新的协程
-//                                scaffoldState.drawerState.open() //在协程中调用scaffoldState的drawerState的open方法，这样做可以将打开抽屉的操作切换到后台线程，不会堵塞主线程
-//                            }
-//                        },
-//                        onSearch = { keyword -> //定义一个lambda函数，这个函数会在用户进行搜索时被调用
-//                            scriptListFragment.explorerView.setFilter { it.name.contains(keyword) } //调用scriptListFragment的explorerView的setFilter方法来对显示的项目进行过滤，只显示名字包含搜索关键字的项目
-//                        },
-//                        scriptListFragment = scriptListFragment, //传递脚本列表的fragment，这样TopBar可以访问到他的方法和属性
-//                        webViewFragment = webViewFragment //传递webview的fragment，这样TopBar可以访问到他的方法和属性
-//                    )
-//                }
-//            }
-//        },
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.wrapContentHeight(),
+                title = {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    ) {
+                        Text(
+                            stringResource(id = R.string.app_name),
+                            fontWeight = FontWeight.Bold,
+                            //style = MaterialTheme.typography.headlineLarge
+                        )
+                    }
+                }
+            )
+        } ,
         bottomBar = {  //设置底部栏
             Surface(elevation = 4.dp, color = MaterialTheme.colors.surface) {
                 Column {
@@ -259,8 +268,8 @@ fun MainPage(
                     adapter = ViewPager2Adapter( //设置adapter
                         activity,
                         startUpFragment,
-                        bindMachineFragment,
-                        scriptListFragment
+                        bindMachine,
+                        webViewFragment
                     )
                     isUserInputEnabled = false //禁止用户输入
                     ViewCompat.setNestedScrollingEnabled(this, true) //允许嵌套滑动
