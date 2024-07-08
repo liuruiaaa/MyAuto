@@ -142,6 +142,7 @@ android {
 dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.8")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
     implementation(libs.material.material)
     implementation(projects.autojs)
     implementation(projects.apkbuilder)

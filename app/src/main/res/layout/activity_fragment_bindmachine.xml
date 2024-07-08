@@ -8,6 +8,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         style="?attr/textInputOutlinedStyle"
+        android:id="@+id/mache_name_id"
         android:layout_width="@dimen/material_textinput_default_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -26,6 +27,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         style="?attr/textInputOutlinedDenseStyle"
+        android:id="@+id/token_id"
         android:layout_width="@dimen/material_textinput_default_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
