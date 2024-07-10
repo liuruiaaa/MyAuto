@@ -11,7 +11,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuHost;
+import androidx.core.view.MenuProvider;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 
 import org.autojs.autojs.timing.TaskReceiver;
 import org.autojs.autojs.tool.Observers;
@@ -24,7 +29,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 /**
  * Created by Stardust on 2017/4/5.
  */
-public class TaskerScriptEditActivity extends BaseActivity {
+public abstract class TaskerScriptEditActivity extends BaseActivity {
 
     public static final int REQUEST_CODE = 10016;
     public static final String EXTRA_TASK_ID = TaskReceiver.EXTRA_TASK_ID;
@@ -73,5 +78,29 @@ public class TaskerScriptEditActivity extends BaseActivity {
     @Override
     public int getLayoutId() {
         return R.layout.activity_tasker_script_edit;
+    }
+
+    /**
+     * Adds the given {@link MenuProvider} to this {@link MenuHost} once the given
+     * {@link LifecycleOwner} reaches the given {@link Lifecycle.State}.
+     * <p>
+     * This {@link MenuProvider} will be removed once the given {@link LifecycleOwner}
+     * goes down from the given {@link Lifecycle.State}.
+     *
+     * @param provider the MenuProvider to be added
+     * @param owner    the Lifecycle owner whose state will be used for automated addition/removal
+     * @param state    the Lifecycle.State to check for automated addition/removal
+     */
+    @Override
+    public void addMenuProvider(@NonNull MenuProvider provider, @NonNull LifecycleOwner owner, @NonNull Lifecycle.State state) {
+
+    }
+
+    /**
+     * @param hasCapture
+     */
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 }
