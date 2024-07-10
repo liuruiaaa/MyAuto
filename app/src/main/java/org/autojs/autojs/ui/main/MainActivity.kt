@@ -3,6 +3,7 @@ package org.autojs.autojs.ui.main
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
@@ -67,6 +68,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
@@ -119,6 +121,7 @@ class MainActivity : FragmentActivity() {
     @OptIn(ExperimentalPermissionsApi::class)//声明这段代码需要使用权限相关的试验性 API
     override fun onCreate(savedInstanceState: Bundle?) {//重写Activity的onCreate方法，这是每个Android应用的生命周期的开始
         super.onCreate(savedInstanceState)//调用父类的onCreate方法，传入系统保存的应用状态
+
         WindowCompat.setDecorFitsSystemWindows(window, false)//允许内容延伸进系统窗口, 例如状态栏
         Log.i("MainActivity", "Pid: ${Process.myPid()}")//在日志中打印出当前App的进程ID
         if (Pref.isForegroundServiceEnabled()) ForegroundService.start(this)//如果前台服务已开启，就开始前台服务

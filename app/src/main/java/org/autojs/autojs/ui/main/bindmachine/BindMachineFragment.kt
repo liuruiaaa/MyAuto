@@ -1,12 +1,13 @@
 package org.autojs.autojs.ui.main.bindmachine
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import android.content.SharedPreferences;
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Toast
@@ -22,7 +23,6 @@ import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import org.autojs.autojs.model.mymodel.SelectItem
 import org.autojs.autoxjs.R
 import java.io.IOException
 import java.util.LinkedList
@@ -32,6 +32,7 @@ class BindMachine : Fragment() {
     private lateinit var view:View;
     private var isStarted = false
     private var disposable: Disposable? = null
+    private var sharedPreferences: SharedPreferences? = null
     @LayoutRes
     private var popupItemLayout = R.layout.cat_popup_item
     override fun onCreateView(
@@ -39,6 +40,7 @@ class BindMachine : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        sharedPreferences = requireContext().getSharedPreferences("autoFileJs", MODE_PRIVATE)
         if (savedInstanceState != null) {
             popupItemLayout = savedInstanceState.getInt(KEY_POPUP_ITEM_LAYOUT)
         }
@@ -62,45 +64,6 @@ class BindMachine : Fragment() {
         mainHandler.post {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private  fun addListItem2(){
-        val listPopupWindowButton = view.findViewById<Button>(R.id.list_popup_window)
-        val listPopupWindow: ListPopupWindow = initializeListPopupMenu(listPopupWindowButton)
-        listPopupWindowButton.setOnClickListener { v: View? -> listPopupWindow.show() }
-
-    }
-
-    private fun initializeListPopupMenu(v: View): ListPopupWindow {
-        // 创建一个 ListPopupWindow 对象，使用当前 Fragment 的上下文，指定样式为系统默认的 listPopupWindowStyle
-        val listPopupWindow =
-            ListPopupWindow(requireContext() , null, R.attr.listPopupWindowStyle)
-        // 创建一个 ArrayAdapter 对象，用于将字符串数组显示在列表弹出窗口中
-        val adapter: ArrayAdapter<CharSequence> =
-            ArrayAdapter<CharSequence>(
-                requireContext(),
-                popupItemLayout,  // 使用指定的布局资源来显示列表项，通常是一个布局文件
-                resources.getStringArray(R.array.cat_list_popup_window_content)
-            ) // 从资源中获取字符串数组
-        // 设置列表弹出窗口的适配器，用于填充和显示列表项
-        listPopupWindow.setAdapter(adapter)
-        // 设置列表弹出窗口的锚点视图，即显示在哪个视图的附近
-        listPopupWindow.anchorView = v
-        // 设置列表项的点击事件监听器
-        listPopupWindow.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
-            // 当列表项被点击时，显示一个 Snackbar，显示被点击的列表项的内容
-            Snackbar.make(
-                requireActivity().findViewById(android.R.id.content),  // 找到当前 Activity 的根视图
-                adapter.getItem(position).toString(),  // 获取点击的列表项内容并转换为字符串
-                Snackbar.LENGTH_LONG
-            ) // Snackbar 显示的时长
-                .show() // 显示 Snackbar
-            // 点击后关闭列表弹出窗口
-            listPopupWindow.dismiss()
-        }
-        listPopupWindow.show()
-        // 返回设置好的列表弹出窗口对象
-        return listPopupWindow
     }
 
     override fun onDestroy() {
@@ -137,6 +100,9 @@ class BindMachine : Fragment() {
                                     adapter.getItem(position).toString(), // 获取点击项的数据并转换为字符串显示
                                     Snackbar.LENGTH_LONG
                                 ).show()
+                                sharedPreferences!!.edit()!!.putString("selectJs",
+                                    adapter.getItem(position).toString() //存到android的本地
+                                ).apply();
                                 listPopupWindow.dismiss() // 点击列表项后关闭 ListPopupWindow
                             }
                             listPopupWindow.show() // 显示 ListPopupWindow
@@ -148,7 +114,7 @@ class BindMachine : Fragment() {
             }
         }
     }
-    
+
     private fun getOkHttpData(callback: (LinkedList<String>?) -> Unit) {
         val url = "https://www.baidu.com" // 替换为你的目标 URL
         val client = OkHttpClient()
@@ -189,5 +155,44 @@ class BindMachine : Fragment() {
             }
         })
     }
+
+//    private  fun addListItem2(){
+//        val listPopupWindowButton = view.findViewById<Button>(R.id.list_popup_window)
+//        val listPopupWindow: ListPopupWindow = initializeListPopupMenu(listPopupWindowButton)
+//        listPopupWindowButton.setOnClickListener { v: View? -> listPopupWindow.show() }
+//
+//    }
+//
+//    private fun initializeListPopupMenu(v: View): ListPopupWindow {
+//        // 创建一个 ListPopupWindow 对象，使用当前 Fragment 的上下文，指定样式为系统默认的 listPopupWindowStyle
+//        val listPopupWindow =
+//            ListPopupWindow(requireContext() , null, R.attr.listPopupWindowStyle)
+//        // 创建一个 ArrayAdapter 对象，用于将字符串数组显示在列表弹出窗口中
+//        val adapter: ArrayAdapter<CharSequence> =
+//            ArrayAdapter<CharSequence>(
+//                requireContext(),
+//                popupItemLayout,  // 使用指定的布局资源来显示列表项，通常是一个布局文件
+//                resources.getStringArray(R.array.cat_list_popup_window_content)
+//            ) // 从资源中获取字符串数组
+//        // 设置列表弹出窗口的适配器，用于填充和显示列表项
+//        listPopupWindow.setAdapter(adapter)
+//        // 设置列表弹出窗口的锚点视图，即显示在哪个视图的附近
+//        listPopupWindow.anchorView = v
+//        // 设置列表项的点击事件监听器
+//        listPopupWindow.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
+//            // 当列表项被点击时，显示一个 Snackbar，显示被点击的列表项的内容
+//            Snackbar.make(
+//                requireActivity().findViewById(android.R.id.content),  // 找到当前 Activity 的根视图
+//                adapter.getItem(position).toString(),  // 获取点击的列表项内容并转换为字符串
+//                Snackbar.LENGTH_LONG
+//            ) // Snackbar 显示的时长
+//                .show() // 显示 Snackbar
+//            // 点击后关闭列表弹出窗口
+//            listPopupWindow.dismiss()
+//        }
+//        listPopupWindow.show()
+//        // 返回设置好的列表弹出窗口对象
+//        return listPopupWindow
+//    }
 
 }
