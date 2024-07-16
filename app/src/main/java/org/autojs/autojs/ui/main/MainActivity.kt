@@ -112,7 +112,7 @@ class MainActivity : FragmentActivity() {
     private var drawerState: DrawerState? = null
     private val viewPager: ViewPager2 by lazy { ViewPager2(this) }
     private var scope: CoroutineScope? = null
-    @OptIn(ExperimentalPermissionsApi::class)//声 明这段代码需要使用权限相关的试验性 API
+    @OptIn(ExperimentalPermissionsApi::class)//声明这段代码需要使用权限相关的试验性 API
     override fun onCreate(savedInstanceState: Bundle?) {//重写Activity的onCreate方法，这是每个Android应用的生命周期的开始
         super.onCreate(savedInstanceState)//调用父类的onCreate方法，传入系统保存的应用状态
         WindowCompat.setDecorFitsSystemWindows(window, false)//允许内容延伸进系统窗口, 例如状态栏
