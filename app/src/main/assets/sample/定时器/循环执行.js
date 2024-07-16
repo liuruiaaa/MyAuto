@@ -1,3 +1,4 @@
+toast("静等8秒，你会看到想看的...");
 var i = 0;
 
 setInterval(function(){

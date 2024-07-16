@@ -95,6 +95,7 @@ import org.autojs.autojs.ui.main.components.DocumentPageMenuButton
 import org.autojs.autojs.ui.main.components.LogButton
 import org.autojs.autojs.ui.main.scripts.ScriptListFragment
 import org.autojs.autojs.ui.main.startup.StartUpFragment
+import org.autojs.autojs.ui.main.task.TaskManagerFragmentKt
 import org.autojs.autojs.ui.main.web.EditorAppManager
 import org.autojs.autojs.ui.util.launchActivity
 import org.autojs.autojs.ui.widget.fillMaxSize
@@ -109,9 +110,9 @@ class MainActivity : FragmentActivity() {
         fun getIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 
-    //private val scriptListFragment by lazy { ScriptListFragment() }
+    private val scriptListFragment by lazy { ScriptListFragment() }
     private val startUpFragment by lazy { StartUpFragment() }
-    //private val taskManagerFragment by lazy { TaskManagerFragmentKt() }
+    private val taskManagerFragment by lazy { TaskManagerFragmentKt() }
     private val bindMachine by lazy { BindMachine() }
     private val webViewFragment by lazy { EditorAppManager() }
     private var lastBackPressedTime = 0L
